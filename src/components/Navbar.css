@@ -19,4 +19,9 @@ nav .logo {
     margin-right: 20px; /* Space between logo and title */
 }
 
+nav h1 {
+    font-size: 1.5rem; /* Font size for the title */
+    font-weight: bold; /* Weight for the title */
+}
+
 /* Other styles remain unchanged... */

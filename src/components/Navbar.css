@@ -1,0 +1,22 @@
+/* Navbar.css */
+nav {
+    background-color: #333; /* Background color of the navbar */
+    color: #fff; /* Text color */
+    padding: 0.5rem 20px; /* Padding around the navbar */
+    display: flex; /* Use flexbox for layout */
+    align-items: center; /* Center items vertically */
+    justify-content: space-between; /* Space out items */
+    width: 100%; /* Full width */
+    position: fixed; /* Fixed positioning */
+    top: 0; /* Stick to the top */
+    left: 0; /* Align to the left */
+    z-index: 1000; /* Ensure it appears above other content */
+}
+
+nav .logo {
+    height: 40px; /* Height of the logo */
+    width: auto; /* Maintain aspect ratio */
+    margin-right: 20px; /* Space between logo and title */
+}
+
+/* Other styles remain unchanged... */

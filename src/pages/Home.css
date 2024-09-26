@@ -1,0 +1,57 @@
+/* Home.css */
+
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%; /* Full height for proper flexbox */
+}
+
+/* Homepage */
+.homepage {
+    background-image: url('../assets/img.jpg'); /* Update the image path as necessary */
+    background-size: cover; /* Ensure the image covers the entire page */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    height: 100vh; /* Full viewport height */
+    width: 100vw; /* Full viewport width */
+    display: flex; /* Use flexbox for centering content */
+    flex-direction: column; /* Stack items vertically */
+    justify-content: center; /* Center items vertically */
+    align-items: center; /* Center items horizontally */
+    color: white; /* Text color for better contrast */
+    text-align: center; /* Center align text */
+    padding: 2rem; /* Add padding to avoid touching edges */
+}
+
+/* Header Styles */
+.homepage h2 {
+    font-size: 2rem; /* Size of the header */
+    margin-bottom: 1rem; /* Space below the header */
+}
+
+/* Paragraph Styles */
+.homepage p {
+    font-size: 1.5rem; /* Size of the paragraph */
+    margin-bottom: 2rem; /* Space below the paragraph */
+}
+
+/* Button Styles */
+.btn {
+    padding: 0.75rem 1.5rem; /* Button padding */
+    background-color: #333; /* Button background color */
+    color: white; /* Button text color */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 1rem; /* Button text size */
+    cursor: pointer; /* Pointer cursor on hover */
+    margin: 0 10px; /* Space between buttons */
+}
+
+.btn:hover {
+    background-color: #555; /* Darker background on hover */
+}

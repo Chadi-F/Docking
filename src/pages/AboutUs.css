@@ -1,0 +1,25 @@
+/* src/pages/AboutUs.css */
+.about-us {
+    padding: 80px 20px; /* Add top padding to prevent content from being hidden by the navbar */
+    max-width: 800px; /* Optional: Limit the width */
+    margin: 0 auto; /* Center the content */
+    font-family: Arial, sans-serif;
+  }
+  
+  .about-us h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    text-align: center; /* Center the title */
+  }
+  
+  .about-us p {
+    margin-bottom: 15px;
+    line-height: 1.6; /* Improve readability */
+  }
+  
+  .about-us ul {
+    margin-left: 20px; /* Indent the list */
+    list-style-type: disc; /* Change the bullet style */
+    text-align: left; /* Align text left */
+  }
+  

@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';  // Import the CSS file
-import { auth } from '../FirebaseConfig';  // Ensure correct Firebase import
-import { signInWithEmailAndPassword } from 'firebase/auth';  // Import sign-in method
 
 const Login = () => {
   const navigate = useNavigate();
@@ -16,23 +14,43 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     
+    const userCredentials = {
+      email,
+      password,
+    };
+
     try {
-      // Sign in with Firebase Authentication
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.log('User logged in:', userCredential.user);
+      const response = await fetch('http://localhost:5000/login', { // Update to your actual login endpoint
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userCredentials),
+      });
 
-      // Redirect to another page after successful login
-      navigate('/dashboard'); // Adjust the route based on your app structure
+      const data = await response.json();
 
+      if (response.ok) {
+        // Redirect to the dashboard on successful login
+        navigate('/dashboard');
+      } else {
+        // Handle errors
+        setError(data.error || 'Login failed. Please try again.');
+      }
     } catch (error) {
-      console.error('Login error:', error.message);
-      setError('Invalid email or password'); // Set error message to display to the user
+      console.error('Error during login:', error);
+      setError('An error occurred. Please try again.');
     }
   };
 
   // Navigate to the signup page
   const navigateToSignup = () => {
     navigate('/signup');
+  };
+
+  // Navigate to the forgot password page
+  const navigateToForgotPassword = () => {
+    navigate('/forgot-password'); // Adjust this route to your actual forgot password page
   };
 
   return (
@@ -67,6 +85,11 @@ const Login = () => {
           Don't have an account? 
           <button onClick={navigateToSignup} className="signup-button">
             Sign up here!
+          </button>
+        </p>
+        <p>
+          <button onClick={navigateToForgotPassword} className="forgot-password-button">
+            Forgot Password? Click here
           </button>
         </p>
       </div>

@@ -10,11 +10,15 @@
 /* Full-height body and html to center content */
 html, body {
     height: 100%; /* Make the body full height */
+    background-image: url('../assets/signup.jpg'); /* Add your background image here */
+    background-size: cover; /* Cover the entire area */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
 }
 
 /* Sign Up Form Styles */
 .signup-container {
-    background: #fff; /* White background for the form */
+    background: rgba(255, 255, 255, 0.9); /* White background for the form with some transparency */
     padding: 2rem; /* Padding inside the form */
     margin: auto; /* Center the form horizontally */
     max-width: 600px; /* Increased maximum width of the form */

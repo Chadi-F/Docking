@@ -1,25 +1,86 @@
 /* src/pages/AboutUs.css */
+
+html, body {
+  height: 100%; /* Make sure html and body take full height */
+  margin: 0; /* Remove default margin */
+}
+
 .about-us {
-    padding: 80px 20px; /* Add top padding to prevent content from being hidden by the navbar */
-    max-width: 800px; /* Optional: Limit the width */
-    margin: 0 auto; /* Center the content */
-    font-family: Arial, sans-serif;
-  }
-  
-  .about-us h1 {
-    font-size: 36px;
-    margin-bottom: 20px;
-    text-align: center; /* Center the title */
-  }
-  
-  .about-us p {
-    margin-bottom: 15px;
-    line-height: 1.6; /* Improve readability */
-  }
-  
-  .about-us ul {
-    margin-left: 20px; /* Indent the list */
-    list-style-type: disc; /* Change the bullet style */
-    text-align: left; /* Align text left */
-  }
-  
+  padding: 80px 20px; /* Add top padding to prevent content from being hidden by the navbar */
+  max-width: 800px; /* Optional: Limit the width */
+  margin: 0 auto; /* Center the content */
+  font-family: Arial, sans-serif;
+  background-image: url('../assets/about-us.jpg'); /* Add your background image here */
+  background-size: cover; /* Cover the entire area */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
+  color: #333; /* Set a default text color for readability */
+  min-height: 100vh; /* Ensure the section takes at least full viewport height */
+  position: relative; /* Ensure positioned relative to parent for z-index */
+}
+
+.about-us h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+  text-align: center; /* Center the title */
+}
+
+.about-us p {
+  margin-bottom: 15px;
+  line-height: 1.6; /* Improve readability */
+}
+
+.about-us ul {
+  margin-left: 20px; /* Indent the list */
+  list-style-type: disc; /* Change the bullet style */
+  text-align: left; /* Align text left */
+}
+
+/* Optional: Add a translucent background to the text for readability */
+.about-us::before {
+  content: "";
+  position: absolute; /* Positioning to cover the area */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.7); /* White with transparency */
+  z-index: 1; /* Place it behind the content */
+}
+
+.about-us > * {
+  position: relative; /* Ensure the text is above the background */
+  z-index: 2; /* Raise the text above the translucent layer */
+}
+
+/* src/pages/AboutUs.css */
+
+/* Existing styles... */
+
+/* src/pages/AboutUs.css */
+
+/* Existing styles... */
+
+.collapsible-section {
+  margin-bottom: 10px; /* Space between sections */
+  border: 1px solid #ccc; /* Border around sections */
+  border-radius: 5px; /* Rounded corners */
+}
+
+.collapsible-header {
+  background-color: #f1f1f1; /* Light background for the header */
+  padding: 10px; /* Padding for the header */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-weight: bold; /* Bold text for the header */
+}
+
+.collapsible-content {
+  display: none; /* Hide content by default */
+  padding: 10px; /* Padding for the content */
+  background-color: white; /* White background for content */
+}
+
+.collapsible-content.open {
+  display: block; /* Show content when 'open' class is added */
+}
+

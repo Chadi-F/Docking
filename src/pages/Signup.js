@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Signup.css';
-import { auth } from '../FirebaseConfig'; // Ensure this is the correct path
-import { createUserWithEmailAndPassword } from 'firebase/auth'; // Import Firebase function
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -12,31 +10,59 @@ const Signup = () => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [phone, setPhone] = useState('');
-  const [doctorId, setDoctorId] = useState('');
-  const [specialty, setSpecialty] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [doctor_id, setDoctor_Id] = useState('');
+  const [speciality, setSpeciality] = useState('');
+  const [error, setError] = useState(''); // State for error handling
 
   // Handle form submission
   const handleSignup = async (e) => {
     e.preventDefault();
-
+  
     try {
-      // Firebase signup with email and password
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      console.log('User signed up:', userCredential.user);
-
-      // Optionally, you can save additional info like firstName, lastName, etc., to Firestore
-
-      // Navigate to a different page after successful signup
-      navigate('/dashboard'); // Adjust the route as necessary
+      console.log(JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          password,
+           phoneNumber,
+           doctor_id,
+           speciality,
+        }))
+      const response = await fetch('http://localhost:5000/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          password,
+         phoneNumber,
+          doctor_id,
+           speciality,
+        }),
+      });
+  
+      if (response.ok) {
+        // Redirect to login page after successful signup
+        navigate('/login');
+      } else {
+        const errorMessage = await response.text();
+        setError(errorMessage); // Handle the error message
+      }
     } catch (error) {
-      console.error('Error during sign up:', error.message);
+      console.error('Error during signup:', error);
+      setError('Signup failed. Please try again.');
     }
   };
+  
 
   return (
     <div className="signup-container">
       <h2>Sign Up</h2>
+      {error && <p className="error-message">{error}</p>} {/* Display error if any */}
       <form onSubmit={handleSignup}>
         <div className="name-fields">
           <div className="first-name">
@@ -76,8 +102,8 @@ const Signup = () => {
             <label>Phone Number:</label>
             <input
               type="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
               placeholder="Enter your phone number"
               required
             />
@@ -89,8 +115,8 @@ const Signup = () => {
             <label>Doctor ID:</label>
             <input
               type="text"
-              value={doctorId}
-              onChange={(e) => setDoctorId(e.target.value)}
+              value={doctor_id}
+              onChange={(e) => setDoctor_Id(e.target.value)}
               placeholder="Enter your doctor ID"
               required
             />
@@ -99,8 +125,8 @@ const Signup = () => {
             <label>Specialty:</label>
             <input
               type="text"
-              value={specialty}
-              onChange={(e) => setSpecialty(e.target.value)}
+              value={speciality}
+              onChange={(e) => setSpeciality(e.target.value)}
               placeholder="Enter your specialty"
               required
             />

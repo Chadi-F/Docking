@@ -1,34 +1,24 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './Signup.css';
 
 const Signup = () => {
   const navigate = useNavigate();
 
-  // State to store form inputs
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [doctor_id, setDoctor_Id] = useState('');
-  const [speciality, setSpeciality] = useState('');
-  const [error, setError] = useState(''); // State for error handling
+  const [specialty, setspecialty] = useState('');
+  const [error, setError] = useState('');
 
-  // Handle form submission
   const handleSignup = async (e) => {
     e.preventDefault();
-  
+
     try {
-      console.log(JSON.stringify({
-          firstName,
-          lastName,
-          email,
-          password,
-           phoneNumber,
-           doctor_id,
-           speciality,
-        }))
       const response = await fetch('http://localhost:5000/signup', {
         method: 'POST',
         headers: {
@@ -39,46 +29,46 @@ const Signup = () => {
           lastName,
           email,
           password,
-         phoneNumber,
+          phoneNumber,
           doctor_id,
-           speciality,
+          specialty,
         }),
       });
-  
+
       if (response.ok) {
-        // Redirect to login page after successful signup
         navigate('/login');
       } else {
         const errorMessage = await response.text();
-        setError(errorMessage); // Handle the error message
+        setError(errorMessage);
       }
     } catch (error) {
       console.error('Error during signup:', error);
       setError('Signup failed. Please try again.');
     }
   };
-  
 
   return (
-    <div className="signup-container">
-      <h2>Sign Up</h2>
-      {error && <p className="error-message">{error}</p>} {/* Display error if any */}
-      <form onSubmit={handleSignup}>
-        <div className="name-fields">
-          <div className="first-name">
+    <div className="signup-container container">
+      <h2 className="text-center">Sign Up</h2>
+      {error && <p className="text-danger text-center">{error}</p>}
+      <form onSubmit={handleSignup} className="bg-white p-4 rounded shadow-sm">
+        <div className="row">
+          <div className="col-md-6 mb-3">
             <label>First Name:</label>
             <input
               type="text"
+              className="form-control"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               placeholder="Enter your first name"
               required
             />
           </div>
-          <div className="last-name">
+          <div className="col-md-6 mb-3">
             <label>Last Name:</label>
             <input
               type="text"
+              className="form-control"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               placeholder="Enter your last name"
@@ -87,21 +77,23 @@ const Signup = () => {
           </div>
         </div>
 
-        <div className="contact-fields">
-          <div className="email">
+        <div className="row">
+          <div className="col-md-6 mb-3">
             <label>Email:</label>
             <input
               type="email"
+              className="form-control"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               required
             />
           </div>
-          <div className="phone">
+          <div className="col-md-6 mb-3">
             <label>Phone Number:</label>
             <input
               type="tel"
+              className="form-control"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
               placeholder="Enter your phone number"
@@ -110,33 +102,36 @@ const Signup = () => {
           </div>
         </div>
 
-        <div className="doctor-fields">
-          <div className="doctor-id">
+        <div className="row">
+          <div className="col-md-6 mb-3">
             <label>Doctor ID:</label>
             <input
               type="text"
+              className="form-control"
               value={doctor_id}
               onChange={(e) => setDoctor_Id(e.target.value)}
               placeholder="Enter your doctor ID"
               required
             />
           </div>
-          <div className="specialty">
+          <div className="col-md-6 mb-3">
             <label>Specialty:</label>
             <input
               type="text"
-              value={speciality}
-              onChange={(e) => setSpeciality(e.target.value)}
+              className="form-control"
+              value={specialty}
+              onChange={(e) => setspecialty(e.target.value)}
               placeholder="Enter your specialty"
               required
             />
           </div>
         </div>
 
-        <div className="password-field">
+        <div className="mb-3">
           <label>Password:</label>
           <input
             type="password"
+            className="form-control"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password"
@@ -144,7 +139,7 @@ const Signup = () => {
           />
         </div>
 
-        <button type="submit">Sign Up</button>
+        <button type="submit" className="btn btn-primary w-100">Sign Up</button>
       </form>
     </div>
   );

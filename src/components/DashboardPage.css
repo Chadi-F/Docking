@@ -1,0 +1,41 @@
+.dashboard-container {
+    padding: 0 15px; /* Optional: Adjust padding for alignment */
+}
+
+.add-patient-block,
+.start-billing-block,
+.billing-history-block {
+    background-size: cover; /* Cover the entire block */
+    background-position: center; /* Center the background image */
+    border: 1px solid #007bff; /* Optional: Change the border color */
+    border-radius: 0.5rem; /* Optional: Change the border radius */
+    transition: transform 0.2s; /* Optional: Add a transition for hover effects */
+    height: 500px; /* Set uniform height */
+    color: white; /* Set text color to white for better contrast */
+}
+
+.add-patient-block {
+    background-image: url('../assets/doctor-patient-consultation.jpg'); /* Adjust the path to your background image */
+}
+
+.start-billing-block {
+    background-image: url('../assets/top-view-messy-office-workspace-with-tablet.jpg'); /* Add background image for Start Billing block */
+}
+
+.billing-history-block {
+    background-image: url('../assets/closeup-person-calculating-paying-bills.jpg'); /* Adjust the path to your background image */
+}
+
+.add-patient-block:hover,
+.start-billing-block:hover,
+.billing-history-block:hover {
+    transform: scale(1.05); /* Optional: Slightly enlarge the block on hover */
+}
+
+.add-patient-block .card-body,
+.start-billing-block .card-body,
+.billing-history-block .card-body {
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay for text readability */
+    border-radius: 0.5rem; /* Ensure border radius matches the card */
+    padding: 20px; /* Add padding for spacing */
+}

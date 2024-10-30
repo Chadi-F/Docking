@@ -36,3 +36,48 @@
     transform: rotate(360deg);
   }
 }
+
+/* App.css */
+
+/* Light mode styles */
+.light-mode {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.light-mode nav {
+  background-color: #f8f9fa;  /* Light navbar */
+}
+
+.light-mode button {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Dark mode styles */
+.dark-mode {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.dark-mode nav {
+  background-color: #333333;  /* Dark navbar */
+}
+
+.dark-mode button {
+  background-color: #ff5722;
+  color: white;
+}
+
+/* General button styling */
+button {
+  margin: 20px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.8;
+}

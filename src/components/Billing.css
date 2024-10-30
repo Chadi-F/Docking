@@ -1,0 +1,15 @@
+/* Billing.css */
+
+.container {
+    max-width: 800px; /* Limit the width for better appearance */
+    margin: auto; /* Center the container */
+  }
+  
+  .table {
+    margin-top: 20px;
+  }
+  
+  .btn-danger {
+    margin-top: 10px; /* Add some space above the delete button */
+  }
+  

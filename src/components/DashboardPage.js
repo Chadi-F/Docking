@@ -7,18 +7,6 @@ const DashboardPage = () => {
   return (
     <Container className="dashboard-container" fluid>
       <Row className="justify-content-center align-items-center" style={{ height: '100vh' }}>
-        <Col xs={12} sm={6} md={3} className="mb-4">
-          <Link to="/add-patient" className="text-decoration-none">
-            <Card className="add-patient-block text-center">
-              <Card.Body className="d-flex flex-column justify-content-center align-items-center">
-                <Card.Title>Add New Patient</Card.Title>
-                <Card.Text>
-                  Click here to add a new patient to the system.
-                </Card.Text>
-              </Card.Body>
-            </Card>
-          </Link>
-        </Col>
 
         <Col xs={12} sm={6} md={3} className="mb-4">
           <Link to="/billing" className="text-decoration-none">

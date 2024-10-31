@@ -5,7 +5,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './components/DashboardPage';
-import AddNewPatientPage from './components/AddNewPatientPage'; // Import the new page component
+
 import Billing from './components/Billing'; // Import the new Billing component
 import BillingHistoryList from './components/BillingHistoryList'; // Import the BillingHistory component
 import ProtectedRoute from './utils/ProtectedRoute';
@@ -53,13 +53,6 @@ const App = () => {
               </ProtectedRoute>
             </AuthProvider>
           } />
-          <Route path="/add-patient" element={
-            <AuthProvider>
-              <ProtectedRoute>
-                <AddNewPatientPage />
-              </ProtectedRoute>
-            </AuthProvider>
-          } /> {/* New route for adding a patient */}
           <Route path="/billing" element={
             <AuthProvider>
               <ProtectedRoute>

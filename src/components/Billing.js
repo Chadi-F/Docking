@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import './Billing.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,108 +8,131 @@ const Billing = () => {
   const [ramqNumber, setRamqNumber] = useState('');
   const [service_code, setServiceId] = useState('');
   const [bills, setBills] = useState([]);
-  const [selectedBills, setSelectedBills] = useState([]);
+  const [isEditing, setIsEditing] = useState(null);
   const [patientInfo, setPatientInfo] = useState(null);
-  const [serviceInfo, setServiceInfo] = useState(null); // State to store service info
+  const [serviceInfo, setServiceInfo] = useState(null);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // Fetch patient information based on RAMQ ID
   const handleSearchPatient = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/patient/${ramqNumber}`, { 
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-  
+      const response = await fetch(`http://localhost:5000/patient/${ramqNumber}`);
       if (response.ok) {
         const data = await response.json();
-        console.log("Fetched patient data:", data); // Log the fetched data
-        setPatientInfo(data.patient); // Store patient info if found
-        setError(''); // Clear any previous error
-      } else {
-        throw new Error('Patient not found');
-      }
-    } catch (error) {
-      console.error('Error fetching patient:', error);
-      setPatientInfo(null); // Clear any previous patient info
+        setPatientInfo(data.patient);
+        setError('');
+      } else throw new Error('Patient not found');
+    } catch {
+      setPatientInfo(null);
       setError('Patient not found. Please check the RAMQ ID.');
     }
   };
 
-  // Fetch service information based on Service ID
   const handleSearchService = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/service/${service_code}`, { 
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-  
+      const response = await fetch(`http://localhost:5000/service/${service_code}`);
       if (response.ok) {
         const data = await response.json();
-        console.log("Fetched service data:", data); // Log the fetched data
-        setServiceInfo(data.serviceValue); // Store service info if found
-        setError(''); // Clear any previous error
-      } else {
-        throw new Error('Service not found');
-      }
-    } catch (error) {
-      console.error('Error fetching service:', error);
-      setServiceInfo(null); // Clear any previous service info
+        setServiceInfo(data.serviceValue);
+        setError('');
+      } else throw new Error('Service not found');
+    } catch {
+      setServiceInfo(null);
       setError('Service not found. Please check the Service ID.');
     }
   };
 
-  const handleSubmitBill = async (e) => {
+  const handleSubmitBill = (e) => {
     e.preventDefault();
-    const billData = { rammqId: ramqNumber, serviceId: service_code };
+    const newBill = {
+      ramqId: ramqNumber,
+      serviceId: service_code,
+      patient: patientInfo,
+      service: serviceInfo,
+      amount: serviceInfo?.monetary_value || 0,
+    };
 
+    if (isEditing !== null) {
+      const updatedBills = [...bills];
+      updatedBills[isEditing] = newBill;
+      setBills(updatedBills);
+      setIsEditing(null);
+    } else {
+      setBills((prevBills) => [...prevBills, newBill]);
+    }
+
+    setRamqNumber('');
+    setServiceId('');
+    setPatientInfo(null);
+    setServiceInfo(null);
+  };
+
+  const handleEditClick = (index) => {
+    const billToEdit = bills[index];
+    setRamqNumber(billToEdit.ramqId);
+    setServiceId(billToEdit.serviceId);
+    setPatientInfo(billToEdit.patient);
+    setServiceInfo(billToEdit.service);
+    setIsEditing(index);
+  };
+
+  const handleDeleteRow = (index) => {
+    setBills((prevBills) => prevBills.filter((_, i) => i !== index));
+  };
+
+  const handleDeleteAllBills = () => {
+    setBills([]);
+  };
+
+  function getTodayDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const day = String(today.getDate()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}`;
+  }
+  
+
+  const handleSubmitAllBills = async () => {
     try {
-      const response = await fetch('https://localhost:5000/submit-bills', {
+      const response = await fetch('http://localhost:5000/submit-bills', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(billData),
+        body: JSON.stringify(bills.map((bill) => ({
+          user_id: 1,
+          service_id: bill.service.id,
+          patient_id: bill.patient.id,
+          amount: bill.amount,
+          status: 'sent',
+          created_at: getTodayDate(),
+          updated_at: getTodayDate(),
+        })))
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        setBills((prevBills) => [...prevBills, { ...billData, amount: data.amount }]);
-        setRamqNumber('');
-        setServiceId('');
-        setError(''); // Clear error if successful
-      } else {
-        throw new Error('Failed to submit bill');
-      }
-    } catch (error) {
-      console.error('Error submitting bill:', error);
-      setError('Could not submit the bill. Please try again.');
+      if (!response.ok) throw new Error('Failed to submit bills');
+      setBills([]);
+      setError('');
+    } catch {
+      setError('Could not submit the bills. Please try again.');
     }
   };
 
-  const handleDeleteBills = () => {
-    const remainingBills = bills.filter((bill) => !selectedBills.includes(bill.rammqId));
-    setBills(remainingBills);
-    setSelectedBills([]);
-  };
-
-  const handleSelectBill = (ramqId) => {
-    setSelectedBills((prevSelected) =>
-      prevSelected.includes(ramqId)
-        ? prevSelected.filter((id) => id !== ramqId)
-        : [...prevSelected, ramqId]
-    );
+  // New function to handle the cancel action
+  const handleCancel = () => {
+    setRamqNumber('');
+    setServiceId('');
+    setPatientInfo(null);
+    setServiceInfo(null);
+    setIsEditing(null);
+    setError('');
   };
 
   return (
     <div className="container mt-5">
-      {/* Back to Dashboard Button */}
-      <button onClick={() => navigate('/dashboard')} className="btn btn-secondary mb-4">
-        Back to Dashboard
-      </button>
-
+      <button onClick={() => navigate('/dashboard')} className="btn btn-secondary mb-4">Back to Dashboard</button>
       <h2 className="mb-4 text-center">Billing Session</h2>
 
-      {/* Search Field for RAMQ ID */}
       <div className="form-group mb-4">
         <label htmlFor="searchRammqId">Search by RAMQ ID:</label>
         <div className="input-group">
@@ -125,36 +149,22 @@ const Billing = () => {
         {error && <p style={{ color: 'red' }}>{error}</p>}
       </div>
 
-      {/* Display Patient Information if Found */}
       {patientInfo && (
         <div className="patient-info mb-4">
           <h4>Patient Information</h4>
-          <div className='row'>
-            <div className='col-md-4'>
+          <input type="hidden" value={patientInfo.id} />
+          <div className="mb-4">
             <p><strong>First Name:</strong> {patientInfo.first_name}</p>
-            </div>
-            <div className='col-md-4'>
+          </div>
+          <div className="mb-4">
             <p><strong>Last Name:</strong> {patientInfo.last_name}</p>
-            </div>
-            <div className='col-md-4'>
+          </div>
+          <div className="mb-4">
             <p><strong>Date of Birth:</strong> {patientInfo.date_of_birth}</p>
-            </div>
           </div>
-          <div className='row'>
-            <div className='col-md-4'>
-            <p><strong>Phone Number:</strong> {patientInfo.phone_number}</p>
-            </div>
-            <div className='col-md-4'>
-            <p><strong>Email:</strong> {patientInfo.email}</p>
-            </div>
-          </div>
-            <div className='col-md-4'>
-            <p><strong>Gender:</strong> {patientInfo.gender}</p>
-            </div>
         </div>
       )}
 
-      {/* Form to Submit a Bill */}
       <form onSubmit={handleSubmitBill} className="mb-4">
         <div className="form-row">
           <div className="form-group">
@@ -169,61 +179,77 @@ const Billing = () => {
               required
             />
           </div>
-          <div className="form-group col-md-6">
-            <button type="button" onClick={handleSearchService} className="btn btn-primary">Search Service</button>
-          </div>
+          <button type="button" onClick={handleSearchService} className="btn btn-primary">Search Service</button>
         </div>
+
         {serviceInfo && (
           <div className="service-info mb-4">
             <h4>Service Information</h4>
-            <div className='row'>
-            <div className='col-md-4'>
-            <p><strong>Title:</strong> {serviceInfo.title}</p>
+            <input type="hidden" value={serviceInfo.id} />
+            <div className="mb-4">
+              <p><strong>Title:</strong> {serviceInfo.title}</p>
             </div>
-            <div className='col-md-4'>
-            <p><strong>Description:</strong> {serviceInfo.description}</p>
+            <div className="mb-4">
+              <p><strong>Description:</strong> {serviceInfo.description}</p>
             </div>
-            <div className='col-md-4'>
-            <p><strong>Monetary Value:</strong> ${serviceInfo.monetary_value}</p>
-            </div>
+            <div className="mb-4">
+              <p><strong>Monetary Value:</strong> ${serviceInfo.monetary_value}</p>
             </div>
           </div>
         )}
-        <button type="submit" className="btn btn-primary">Submit Bill</button>
+
+        { serviceInfo && patientInfo && (
+          <div className="">
+
+                  <button type="submit" className="btn btn-primary mt-3">{isEditing !== null ? 'Update Bill' : 'Add Bill'}</button>
+                  <button type="button" onClick={handleCancel} className="btn btn-secondary mt-3 ml-2">Cancel</button>
+                  </div>
+        )}
+        
       </form>
 
-      {/* Submitted Bills Table */}
       <h3 className="mb-3">Submitted Bills</h3>
       <table className="table table-striped">
         <thead>
           <tr>
-            <th>Select</th>
             <th>RAMQ ID</th>
             <th>Service ID</th>
             <th>Amount</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {bills.map((bill) => (
-            <tr key={bill.rammqId}>
-              <td>
-                <input
-                  type="checkbox"
-                  checked={selectedBills.includes(bill.rammqId)}
-                  onChange={() => handleSelectBill(bill.rammqId)}
-                />
-              </td>
-              <td>{bill.rammqId}</td>
+          {bills.map((bill, index) => (
+            <tr key={`${bill.ramqId}-${index}`}>
+              <td>{bill.ramqId}</td>
               <td>{bill.serviceId}</td>
               <td>{bill.amount}</td>
+              <td>
+                <span onClick={() => handleEditClick(index)} style={{ cursor: 'pointer', marginRight: '10px' }}>
+                  <i className="bi bi-pencil-square"></i>
+                </span>
+                <span onClick={() => handleDeleteRow(index)} style={{ cursor: 'pointer', color: 'red' }}>
+                  <i className="bi bi-trash"></i>
+                </span>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      <button className="btn btn-danger" onClick={handleDeleteBills} disabled={selectedBills.length === 0}>
-        Delete Selected Bills
+      {bills.length > 0 && (
+      <div>
+      <button className="btn btn-danger" onClick={handleDeleteAllBills}>
+        Delete All Bills
       </button>
+
+      {/* Submit Bill Button at the end */}
+      <button onClick={handleSubmitAllBills} className="btn btn-primary mt-3">Submit All Bills</button>
+      </div>        
+      )}
+
+
+
     </div>
   );
 };

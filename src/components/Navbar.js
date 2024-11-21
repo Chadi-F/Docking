@@ -1,59 +1,114 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import {
-  Button,
-  Navbar as BootstrapNavbar,
-  Nav,
-  Container,
-  NavDropdown
-} from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.webp';
-import './Navbar.css'; // Ensure you import your CSS file for custom styles
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import './Navbar.css';
 
-const Navbar = ({ toggleTheme, isDarkMode, isLoggedIn }) => {
-  const [expanded, setExpanded] = useState(false);
+const Navbar = ({ isLoggedIn }) => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    console.log('User logged out');
+    navigate('/login');
+  };
+
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+  };
+
+  // Apply dark-mode to body on mount or theme change
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+  }, [isDarkMode]);
 
   return (
-    <BootstrapNavbar
-      expand="lg"
-      bg={isDarkMode ? 'dark' : 'light'}
-      variant={isDarkMode ? 'dark' : 'light'}
-      expanded={expanded}
-      onToggle={() => setExpanded(!expanded)}
-      className="py-1 small-navbar" // Custom class for reduced navbar height
-    >
-      <Container fluid>
-        {/* Navbar Brand (left-aligned logo) */}
-        <Link to="/" className="navbar-brand">
-          <img src={logo} alt="Logo" className="logo" />
-          DocInc
-        </Link>
+    <>
+      {/* Header */}
+      <nav className="navbar navbar-dark fixed-top">
+        <div className="container-fluid">
+          <button
+            className="btn btn-outline-secondary me-2"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#sidebar"
+            aria-controls="sidebar"
+          >
+            ☰
+          </button>
+          <Link to="/" className="navbar-brand">
+            DocInc
+          </Link>
 
-        {/* Toggle Button for Mobile */}
-        <BootstrapNavbar.Toggle aria-controls="navbar-content" />
+          <div className="d-flex align-items-center">
+            <img
+              src={logo}
+              alt="Profile"
+              className="rounded-circle me-2"
+              style={{ width: '30px', height: '30px' }}
+            />
+            
+            {/* Sun/Moon Icon with a slider toggle for light/dark mode */}
+            <div className="theme-toggle">
+              <i
+                className={`bi ${isDarkMode ? 'bi-sun' : 'bi-moon'}`}
+                onClick={toggleTheme}
+                style={{ cursor: 'pointer', marginRight: '10px' }}
+              ></i>
+              <input
+                type="checkbox"
+                className="slider"
+                checked={isDarkMode}
+                onChange={toggleTheme}
+              />
+            </div>
 
-        {/* Navbar Content */}
-        <BootstrapNavbar.Collapse id="navbar-content">
-          <Nav className="ms-auto align-items-center"> {/* Aligns items to the right */}
-            <Nav.Link as={Link} to="/">Home</Nav.Link>
-            <Nav.Link as={Link} to="/about">About Us</Nav.Link>
-            {isLoggedIn && (
-              <NavDropdown title="Dashboard" id="dashboard-dropdown">
-                <NavDropdown.Item as={Link} to="/add-patient">
-                  Add New Patient
-                </NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="/billing-history">
-                  Billing History
-                </NavDropdown.Item>
-              </NavDropdown>
-            )}
-            <Button onClick={toggleTheme} className="ms-3" aria-label="Toggle dark/light mode">
-              {isDarkMode ? 'Light Mode' : 'Dark Mode'}
-            </Button>
-          </Nav>
-        </BootstrapNavbar.Collapse>
-      </Container>
-    </BootstrapNavbar>
+            <button className="btn btn-danger btn-sm" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Sidebar */}
+      <div
+        className={`offcanvas offcanvas-start ${isDarkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}
+        tabIndex="-1"
+        id="sidebar"
+      >
+        <div className="offcanvas-header">
+          <h5 className="offcanvas-title">Menu</h5>
+          <button
+            type="button"
+            className="btn-close"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div className="offcanvas-body">
+          <ul className="nav flex-column">
+            <li className="nav-item">
+              <Link to="/billing" className="nav-link">
+                Start Billing
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/billing-history" className="nav-link">
+                Billing History
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="#" className="nav-link">
+                Help
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </>
   );
 };
 

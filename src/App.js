@@ -5,7 +5,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './components/DashboardPage';
-
+import AdminBills from './pages/AdminBills';
 import Billing from './components/Billing'; // Import the new Billing component
 import BillingHistoryList from './components/BillingHistoryList'; // Import the BillingHistory component
 import ProtectedRoute from './utils/ProtectedRoute';
@@ -34,46 +34,39 @@ const App = () => {
   };
 
   return (
-    <div className={isDarkMode ? 'dark-mode' : 'light-mode'}>
-      <Router>
-        <Navbar toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={
-            <AuthProvider>
-              <Login />
-            </AuthProvider>
-          } />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/dashboard" element={
-            <AuthProvider>
+    <AuthProvider>
+      <div id='bg-app' className={isDarkMode ? 'dark-mode' : 'light-mode'}>
+        <Router>
+          <Navbar toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
+          <div style={{ marginTop: '75px' }}></div> {/* Adjusted to avoid overlap with Navbar */}
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/adminbills" element={<AdminBills />} />
+            <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Dashboard />
               </ProtectedRoute>
-            </AuthProvider>
-          } />
-          <Route path="/billing" element={
-            <AuthProvider>
+            } />
+            <Route path="/billing" element={
               <ProtectedRoute>
-                <Billing /> {/* New route for billing */}
+                <Billing />
               </ProtectedRoute>
-            </AuthProvider>
-          } />
-          <Route path="/billing-history" element={
-            <AuthProvider>
+            } />
+            <Route path="/billing-history" element={
               <ProtectedRoute>
-                <BillingHistoryList /> {/* New route for billing history */}
+                <BillingHistoryList />
               </ProtectedRoute>
-            </AuthProvider>
-          } />
-          <Route path="/about" element={<AboutUs />} />
-        </Routes>
-      </Router>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-z
-    </div>
+            } />
+            <Route path="/about" element={<AboutUs />} />
+          </Routes>
+        </Router>
+      </div>
+    </AuthProvider>
   );
+  
 };
 
 export default App;

@@ -1,4 +1,4 @@
-/* General Reset 
+
 * {
     margin: 0;
     padding: 0;
@@ -14,15 +14,16 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background-image: url('../assets/login.jpg'); /* Background image 
+    height: calc(100vh - 50px); /* Adjust height to account for the navbar */
+    margin-top: 50px; /* Push content below navbar */
+    background-image: url('../assets/login.jpg'); /* Background image */
     background-size: cover;
     background-position: center;
-    background-color: rgba(255, 255, 255, 0.7); /* Fallback for light mode 
+    background-color: rgba(255, 255, 255, 0.7); /* Fallback for light mode */
 }
 
 .login-page.dark {
-    background-color: rgba(0, 0, 0, 0.7); /* Fallback for dark mode 
+    background-color: rgba(0, 0, 0, 0.7);  /*Fallback for dark mode*/
 }
 
 .signin-container {
@@ -40,25 +41,25 @@ html, body {
     background-color: rgba(51, 51, 51, 0.9);
 }
 
-/* New login-box styling 
+/* New login-box styling */
 .login-box {
-    padding: 1rem;
+    padding: 2rem;
     border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.9); /* Light mode default 
+    background-color: rgba(255, 255, 255, 0.9); /* Light mode default */
     transition: background-color 0.3s ease, color 0.3s ease;
+    z-index: 1; /* Ensure it appears above the background */
 }
-
 .login-box.dark {
-    background-color: rgba(34, 34, 34, 0.9); /* Dark background for dark mode 
+    background-color: rgba(34, 34, 34, 0.9); /* Dark background for dark mode */
     color: #fff;
 }
 
 .login-box.light {
-    background-color: rgba(255, 255, 255, 0.9); /* Light background for light mode 
+    background-color: rgba(255, 255, 255, 0.9); /* Light background */
     color: #000;
 }
 
-/* Additional form and button styles 
+/* Additional form and button styles */
 input {
     width: 100%;
     padding: 10px;
@@ -80,4 +81,3 @@ button {
 button:hover {
     background-color: #0056b3;
 }
-*/

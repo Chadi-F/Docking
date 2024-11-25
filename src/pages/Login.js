@@ -2,7 +2,9 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../utils/AuthContext';
 import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap';
-import backgroundImage from '../assets/login.jpg'; // Import the background image
+import backgroundImage from '../assets/login.jpg';
+import './Login.css';
+import AdminBills from './AdminBills';
 
 const Login = ({ isDarkMode }) => {
   const navigate = useNavigate();
@@ -22,7 +24,13 @@ const Login = ({ isDarkMode }) => {
       const data = await response.json();
       if (response.ok) {
         login();
-        navigate('/dashboard');
+        console.log(data);
+        debugger;
+        if(data.user.role === 'admin')
+       {
+          navigate('/adminbills');
+        } else {
+          navigate('/dashboard');}
       } else {
         setError(data.error || 'Login failed. Please try again.');
       }
@@ -35,33 +43,52 @@ const Login = ({ isDarkMode }) => {
   const navigateToSignup = () => navigate('/signup');
   const navigateToForgotPassword = () => navigate('/forgot-password');
 
-  // Inline styling objects
+  // Outer container style (for background and centering)
   const pageStyle = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100vh',
+    minHeight: '100vh',
     overflow: 'hidden',
-    backgroundImage: `url(${backgroundImage})`, // Apply background image
+    backgroundImage: `url(${backgroundImage})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)',
   };
 
+  // Inner container style (for the login box)
   const containerStyle = {
-    padding: '2rem',
+    width: '350px',
+    height: '400px', // Fixed height for the box
+    padding: '1.5rem',
     borderRadius: '10px',
     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
     backgroundColor: isDarkMode ? 'rgba(51, 51, 51, 0.9)' : 'rgba(255, 255, 255, 0.9)',
     color: isDarkMode ? '#fff' : '#000',
     transition: 'background-color 0.3s ease, color 0.3s ease',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between', // Distribute content evenly
+  };
+
+  const buttonStyle = {
+    backgroundColor: '#007bff',
+    border: 'none',
+    borderRadius: '25px',
+    padding: '10px 20px',
+    fontSize: '16px',
+    transition: 'background-color 0.3s ease',
+  };
+
+  const buttonHoverStyle = {
+    backgroundColor: '#0056b3',
   };
 
   return (
     <div style={pageStyle}>
       <Container style={containerStyle}>
         <Row className="justify-content-center">
-          <Col md={6}>
+          <Col>
             <h2 className="text-center mb-4">Login</h2>
             {error && <Alert variant="danger">{error}</Alert>}
             <Form onSubmit={handleLogin}>
@@ -73,9 +100,10 @@ const Login = ({ isDarkMode }) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  style={{ padding: '15px', fontSize: '16px', borderRadius: '10px' }}
                 />
               </Form.Group>
-              <Form.Group controlId="formPassword">
+              <Form.Group controlId="formPassword" className="mt-3">
                 <Form.Label>Password:</Form.Label>
                 <Form.Control
                   type="password"
@@ -83,9 +111,16 @@ const Login = ({ isDarkMode }) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  style={{ padding: '15px', fontSize: '16px', borderRadius: '10px' }}
                 />
               </Form.Group>
-              <Button type="submit" className="w-100 mt-3" style={{ backgroundColor: '#007bff', border: 'none' }}>
+              <Button
+                type="submit"
+                className="w-100 mt-4"
+                style={buttonStyle}
+                onMouseEnter={(e) => (e.target.style.backgroundColor = buttonHoverStyle.backgroundColor)}
+                onMouseLeave={(e) => (e.target.style.backgroundColor = buttonStyle.backgroundColor)}
+              >
                 Login
               </Button>
             </Form>
@@ -106,4 +141,3 @@ const Login = ({ isDarkMode }) => {
 };
 
 export default Login;
-

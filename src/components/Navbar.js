@@ -1,23 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.webp';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './Navbar.css';
+import { AuthContext } from '../utils/AuthContext';
 
-const Navbar = ({ isLoggedIn }) => {
+const Navbar = () => {
+  const { isAuthenticated, logout } = useContext(AuthContext);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    console.log('User logged out');
-    navigate('/login');
-  };
-
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
+    const element = document.getElementById('bg-app');
+    if (isDarkMode) {
+      element.classList.add('dark-mode');
+    } else {
+      element.classList.remove('dark-mode');
+    }
   };
 
-  // Apply dark-mode to body on mount or theme change
   useEffect(() => {
     if (isDarkMode) {
       document.body.classList.add('dark-mode');
@@ -25,6 +27,11 @@ const Navbar = ({ isLoggedIn }) => {
       document.body.classList.remove('dark-mode');
     }
   }, [isDarkMode]);
+
+  const handleLogout = () => {
+    logout(); // Update authentication state
+    navigate('/login'); // Redirect to the login page
+  };
 
   return (
     <>
@@ -50,32 +57,41 @@ const Navbar = ({ isLoggedIn }) => {
               className="rounded-circle me-2"
               style={{ width: '30px', height: '30px' }}
             />
-            
-            {/* Sun/Moon Icon with a slider toggle for light/dark mode */}
-            <div className="theme-toggle">
-              <i
-                className={`bi ${isDarkMode ? 'bi-sun' : 'bi-moon'}`}
-                onClick={toggleTheme}
-                style={{ cursor: 'pointer', marginRight: '10px' }}
-              ></i>
-              <input
-                type="checkbox"
-                className="slider"
-                checked={isDarkMode}
-                onChange={toggleTheme}
-              />
-            </div>
 
-            <button className="btn btn-danger btn-sm" onClick={handleLogout}>
-              Logout
-            </button>
+{isAuthenticated ? (
+            <div className="theme-toggle">
+            <i
+              className={`bi ${isDarkMode ? 'bi-sun' : 'bi-moon'}`}
+              onClick={toggleTheme}
+              style={{ cursor: 'pointer', marginRight: '10px' }}
+            ></i>
+            <input
+              type="checkbox"
+              className="slider"
+              checked={isDarkMode}
+              onChange={toggleTheme}
+            />
+          </div>
+            ) : (
+             <></>
+            )}
+
+            {isAuthenticated ? (
+              <button className="btn btn-danger btn-sm" onClick={handleLogout}>
+                Logout
+              </button>
+            ) : (
+             <></>
+            )}
           </div>
         </div>
       </nav>
 
       {/* Sidebar */}
       <div
-        className={`offcanvas offcanvas-start ${isDarkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}
+        className={`offcanvas offcanvas-start ${
+          isDarkMode ? 'bg-dark text-white' : 'bg-light text-dark'
+        }`}
         tabIndex="-1"
         id="sidebar"
       >
@@ -90,21 +106,26 @@ const Navbar = ({ isLoggedIn }) => {
         </div>
         <div className="offcanvas-body">
           <ul className="nav flex-column">
-            <li className="nav-item">
-              <Link to="/billing" className="nav-link">
-                Start Billing
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/billing-history" className="nav-link">
-                Billing History
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="#" className="nav-link">
-                Help
-              </Link>
-            </li>
+            {isAuthenticated ? (
+              <>
+                <li className="nav-item">
+                  <Link to="/billing" className="nav-link">
+                    Start Billing
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link to="/billing-history" className="nav-link">
+                    Billing History
+                  </Link>
+                </li>
+              </>
+            ) : (
+              <li className="nav-item">
+                <Link to="/help" className="nav-link">
+                  Help
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
       </div>

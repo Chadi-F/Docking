@@ -32,3 +32,23 @@ h2 {
   margin-top: 20px; /* Optional: Adjust margins as needed */
   text-align: center; /* Center text */
 }
+
+/* Billing.css */
+
+/* Ensure consistent alignment within the input group */
+.input-group {
+  display: flex;
+  align-items: center; /* Align items vertically */
+}
+
+/* Consistent input and button height */
+.input-group .form-control,
+.input-group .btn {
+  height: 40px; /* Ensure both have the same height */
+  font-size: 16px; /* Keep the font size consistent */
+}
+
+/* Optional: Add spacing between the input and button */
+.input-group .btn {
+  margin-left: -1px; /* Prevent a gap between input and button */
+}

@@ -43,7 +43,7 @@ const AdminBills = () => {
               <td>{bill.patient_first_name + ' ' + bill.patient_last_name}</td>
               <td>{bill.service_title}</td>
               <td>${bill.amount.toFixed(2)}</td>
-              <td>{new Date(bill.date).toLocaleDateString()}</td>
+              <td>{new Date(bill.created_at).toLocaleDateString()}</td>
             </tr>
           ))}
         </tbody>

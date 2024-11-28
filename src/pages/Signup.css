@@ -112,3 +112,51 @@ html, body {
         width: 100%; /* Full width on smaller screens */
     }
 }
+
+/* Base styles for the login/signup box */
+.box {
+    padding: 2rem;
+    margin: 2rem auto;
+    width: 300px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition between modes */
+}
+
+/* Dark mode box */
+.box.dark {
+    background-color: #333; /* Dark background */
+    color: #fff; /* Light text */
+}
+
+/* Light mode box */
+.box.light {
+    background-color: #f9f9f9; /* Light background */
+    color: #000; /* Dark text */
+}
+
+/* Input fields inside the box */
+.box input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* Button inside the box */
+.box button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.box button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
